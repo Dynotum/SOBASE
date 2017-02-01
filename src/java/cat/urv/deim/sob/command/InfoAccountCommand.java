@@ -33,7 +33,7 @@ public class InfoAccountCommand implements Command{
             orderss = orders.geReservation(userLogin);
         } catch (SQLException | ParseException ex) {
             Logger.getLogger(InfoAccountCommand.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }//infoaccountcommand github
         session.setAttribute("dadesUsuari", user);
         session.setAttribute("dadesComandes", orderss);
         ServletContext context = request.getSession().getServletContext();
