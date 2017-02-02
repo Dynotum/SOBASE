@@ -39,3 +39,4 @@ public class InfoAccountCommand implements Command{
         ServletContext context = request.getSession().getServletContext();
                 context.getRequestDispatcher("/accountUser.jsp").forward(request, response);}
 }
+
