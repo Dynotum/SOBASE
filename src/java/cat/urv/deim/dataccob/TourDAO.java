@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class TourDAO {
     
     public ArrayList<Tour> getTours() throws SQLException {
-        ArrayList<Tour> listTours = new ArrayList<>();
+            ArrayList<Tour> listTours = new ArrayList<>();
             Connection con;
             con = DriverManager.getConnection("jdbc:derby://localhost:1527/demodb", "user", "pwd");
             con.setSchema("DEMODB");

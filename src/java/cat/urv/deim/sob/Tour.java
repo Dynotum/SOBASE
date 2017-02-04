@@ -5,11 +5,14 @@
  */
 package cat.urv.deim.sob;
 
+import cat.urv.deim.dataccob.IKey;
+import cat.urv.deim.dataccob.*;
+
 /**
  *
  * @author dyno
  */
-public class Tour {
+public class Tour implements IKey{
     
 private int IDTour;
 private String title; 
@@ -20,6 +23,16 @@ private float price;
 private String destinationName;
 private String mounth;
 
+    public Tour(TourService idTour, String title, String shortDescription, String longDescription, int availablePlaces, float price, String destinationName, String mounth) {
+        this.title = title;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
+        this.availablePlaces = availablePlaces;
+        this.price = price;
+        this.destinationName = destinationName;
+        this.mounth = mounth;
+    }
+    
     public Tour(int IDTour, String title, String shortDescription, String longDescription, int availablePlaces, float price, String destinationName, String mounth) {
         this.IDTour = IDTour;
         this.title = title;
@@ -30,6 +43,11 @@ private String mounth;
         this.destinationName = destinationName;
         this.mounth = mounth;
     }
+    	public Tour(int id) {this.IDTour = id;}
+
+    	public IKey getKey() {
+            return new Tour(this.IDTour);
+	}
 
     public int getIDTour() {
         return IDTour;

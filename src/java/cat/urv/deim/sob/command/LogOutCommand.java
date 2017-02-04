@@ -16,6 +16,6 @@ public class LogOutCommand implements Command{
         sesion.invalidate();
         ServletContext context = request.getSession().getServletContext();
         context.getRequestDispatcher("/index.jsp").forward(request, response);
-    
+    ///rest/api/vi/promos
     }
 }

@@ -56,15 +56,34 @@ public class ControllerServlet extends HttpServlet {
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
+        /*
+        try {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        out.println("hola");
 
+        out.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }*/
         processCommand(request, response);
     }
 
     @Override
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException {/*
+        try {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        out.println("hola");
 
+        out.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+        */
+        
         processCommand(request, response);
     }
 }

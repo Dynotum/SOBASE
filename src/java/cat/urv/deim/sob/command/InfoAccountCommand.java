@@ -21,6 +21,7 @@ public class InfoAccountCommand implements Command{
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
+        
         HttpSession session = request.getSession(true);
         String userLogin = (String) session.getAttribute("aliasLogin");
        

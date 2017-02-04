@@ -28,10 +28,10 @@
              * If there is any problem, it will exit at the very first error.
              */
             String mexico[] = {"During this experience we will get to know the history of National Mexican Drink, Tequila.",
-                                "Tracing the history and culture of Athens from ancient times to the present day and passing a plethora of various shopping opportunities that are along the route. You can easily visit the many things to do including World famous museums, with spectacular views of ancient temples, the Acropolis and Parthenon. Athens represents the juxtaposition of ancient history and modern life, which is a very rare experience and one not to be missed."
+                               "Agave plants thrive in Tequila, Mexico where conditions such as altitude and climate are perfect for its growth. Tequila is the national beverage of Mexico, and usually consumed for celebrations."
             };
             String athens[] = {"Greece offers tours & transfers in Athens, Greece. We visit Greece as travelers and view the historical sites from all angles.",
-                                "Agave plants thrive in Tequila, Mexico where conditions such as altitude and climate are perfect for its growth. Tequila is the national beverage of Mexico, and usually consumed for celebrations."
+                                "Tracing the history and culture of Athens from ancient times to the present day and passing a plethora of various shopping opportunities that are along the route. You can easily visit the many things to do including World famous museums, with spectacular views of ancient temples, the Acropolis and Parthenon. Athens represents the juxtaposition of ancient history and modern life, which is a very rare experience and one not to be missed."
             };
             String london[] = {"Do some sightseeing around London on one of these top guided tours, from Buckingham Palace to the Tower of London and Warner Bros.",
                                 "London is packed with plenty of things to do so let us guide you through the city to visit the prime locations and top attractions including historical museums, striking parks, and modern galleries. We invite you to experience all the magical sights and sounds of London in a comfortable and secure environment."

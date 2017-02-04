@@ -21,6 +21,6 @@ public class InitCommand implements Command {
 
         // 2. produce the view with the web result
         ServletContext context = request.getSession().getServletContext();
-        context.getRequestDispatcher("/index.jsp").forward(request, response);
+        context.getRequestDispatcher("/index.jsp").forward(request, response); //index
     }
 }
