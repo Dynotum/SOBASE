@@ -2,7 +2,10 @@
 package cat.urv.deim.rest;
 
 import cat.urv.deim.dataccob.TourDAO;
+import cat.urv.deim.dataccob.UserDAO;
+import cat.urv.deim.sob.Reservation;
 import cat.urv.deim.sob.Tour;
+import cat.urv.deim.sob.User;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -21,51 +24,33 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 
-@Stateless
 @Path("/v1")
 public class ApiService {
-    
-    /*
-       METODOS USER RESERVTION TOURS
-    
-    
-    *//*
-    @GET
-    @Path("/users")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsers (){
-       
-        Gson gson= new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson("hola");
-            
-        
-        
-        return Response.status(200).entity("").build(); //entity JSON convertido a String
-    }*/
-    
+                                        /* TOURS*/
     @Path("/promos")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getPromos() throws ClassNotFoundException, SQLException{
+    public Response getPromos() throws ClassNotFoundException, SQLException{
         
         Class.forName("org.apache.derby.jdbc.ClientDriver");
         Connection cn = DriverManager.getConnection("jdbc:derby://localhost:1527/demodb", "user", "pwd");
         String json = "{ \"TOURS\": [";
+
         
         try{
-            ArrayList<Tour> listTours = new ArrayList<>();
 
             cn.setSchema("DEMODB");
             String query = "SELECT * FROM demodb.TOURS";
             PreparedStatement ps = cn.prepareStatement(query);
-            Tour newTour;
             ResultSet resultSet = ps.executeQuery();
+            Tour newTour;
 
                 while (resultSet.next()) {
-                newTour= new Tour(resultSet.getInt(1),
+                newTour = new Tour(resultSet.getInt(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
@@ -73,13 +58,13 @@ public class ApiService {
                         resultSet.getFloat(6),
                         resultSet.getString(7),
                         resultSet.getString(8));
-                listTours.add(newTour);
+             //   listTours.add(newTour);
                 
                 json = json.concat("{\"ID TOUR\":"  + resultSet.getInt(1) + ",\"TITULO\":\"" + resultSet.getString(2)+ "\",\"SHORT DESCRIPTION\":\"" 
                        + resultSet.getString(3)+ "\",\"LONG DESCRIPTION\":\"" + resultSet.getString(4) + "\",\"AVAILABLE PLACES\":\"" + resultSet.getInt(5)
                         + "\",\"PRICE\":\"" + resultSet.getFloat(6) + "\",\"DESTINATION\":\"" + resultSet.getString(7) + "\",\"MOUNTH\":\"" 
                         + resultSet.getString(8)+"\"},");
-        }       
+               }       
                 
                 json = json.substring(0, json.length() - 1);
                 json = json.concat("]}");
@@ -89,9 +74,9 @@ public class ApiService {
         }finally{
             cn.close();
         }
-            out.println(json); 
-            return json;
+            return Response.status(200).entity(json).build();
     }
+    
     /*
     @POST
   @Produces(MediaType.APPLICATION_JSON)
@@ -108,7 +93,7 @@ public class ApiService {
     @GET
     @Path("/promos/{id}")
     @Produces(MediaType.APPLICATION_JSON) 
-    public String getPromoById (@PathParam("id") Integer id) throws ClassNotFoundException, SQLException{
+    public Response getPromoById (@PathParam("id") Integer id) throws ClassNotFoundException, SQLException{
         Class.forName("org.apache.derby.jdbc.ClientDriver");
         Connection cn = DriverManager.getConnection("jdbc:derby://localhost:1527/demodb", "user", "pwd");
         
@@ -133,11 +118,11 @@ public class ApiService {
                         resultSet.getString(7),
                         resultSet.getString(8));
                 
-                json = json.concat("{\"ID TOUR\":"  + resultSet.getInt(1) + ",\"TITULO\":\"" + resultSet.getString(2)+ "\",\"SHORT DESCRIPTION\":\"" 
+                         json = json.concat("{\"ID TOUR\":"  + resultSet.getInt(1) + ",\"TITULO\":\"" + resultSet.getString(2)+ "\",\"SHORT DESCRIPTION\":\"" 
                        + resultSet.getString(3)+ "\",\"LONG DESCRIPTION\":\"" + resultSet.getString(4) + "\",\"AVAILABLE PLACES\":\"" + resultSet.getInt(5)
                         + "\",\"PRICE\":\"" + resultSet.getFloat(6) + "\",\"DESTINATION\":\"" + resultSet.getString(7) + "\",\"MOUNTH\":\"" 
-                        + resultSet.getString(8)+"\"},");
-        }       
+                        + resultSet.getString(8)+"\"},");        
+                }       
                 
                 json = json.substring(0, json.length() - 1);
                 json = json.concat("]}");
@@ -147,38 +132,133 @@ public class ApiService {
         }finally{
             cn.close();
         }//return Response.status(200).entity("").build(); //entity JSON convertido a String
-            return json;
+            return Response.status(200).entity(json).build();
     }
-        /*
-     @POST
-    @Consumes("application/json")
-    public String nouChat(String informacio) throws SQLException, ClassNotFoundException {
+     
+    @Path("/users")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsers() throws ClassNotFoundException, SQLException{
+        
         Class.forName("org.apache.derby.jdbc.ClientDriver");
-        Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/AgendaContactes", "agenda", "agenda");
+        Connection cn = DriverManager.getConnection("jdbc:derby://localhost:1527/demodb", "user", "pwd");
+        String json = "{ \"USERS\": [";
+
         
-        String usuari = getParameterJson(informacio, "ID_USER");
-        String contacte = getParameterJson(informacio, "ID_CONTACTES");
-        
-        try{  
-            con.setSchema("AGENDACONTACTES");
-            
-            String str = "INSERT INTO USUARIS_CONTACTES VALUES (?,?)";
-            PreparedStatement stmt = con.prepareStatement(str);
-            stmt.setString(1, usuari);
-            stmt.setString(2, contacte);
-            stmt.executeUpdate();
-            
-            String str2 = "INSERT INTO USUARIS_CONTACTES VALUES (?,?)";
-            PreparedStatement stmt2 = con.prepareStatement(str2);
-            stmt2.setString(1, contacte);
-            stmt2.setString(2, usuari);
-            stmt2.executeUpdate();
-            
+        try{
+            ArrayList<User> listaUsers = new ArrayList<>();
+
+            cn.setSchema("DEMODB");
+            String query = "SELECT * FROM demodb.USERS";
+            PreparedStatement ps = cn.prepareStatement(query);
+            ResultSet resultSet = ps.executeQuery();
+            User newUser;
+                        
+                while (resultSet.next()) {
+                newUser = new User(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getString(5));
+                listaUsers.add(newUser);
+                
+                json = json.concat("{\"ID NICKNAME\":\""  + resultSet.getString(1) + "\",\"PASSWORD\":\"" + resultSet.getString(2)+ "\",\"NAME\":\"" 
+                     + resultSet.getString(3)+ "\",\"LAST NAME\":\"" + resultSet.getString(4) + "\",\"EMAIL\":\"" + resultSet.getString(5)+"\"},");     
+        }       
+                
+                json = json.substring(0, json.length() - 1);
+                json = json.concat("]}");
+                
         }catch(Exception e){
-           return "Error";
+            e.printStackTrace();
         }finally{
-            con.close();
+            cn.close();
         }
-        return "Nou contacte afegit";
-    }*/
+            return Response.status(200).entity(json).build();
+    }
+                                        /*USERS*/
+    @GET
+    @Path("/users/{id}")
+    @Produces(MediaType.APPLICATION_JSON) 
+    public Response getUserxById (@PathParam("id") String id) throws ClassNotFoundException, SQLException{
+        Class.forName("org.apache.derby.jdbc.ClientDriver");
+        Connection cn = DriverManager.getConnection("jdbc:derby://localhost:1527/demodb", "user", "pwd");
+        Connection cn2 = DriverManager.getConnection("jdbc:derby://localhost:1527/demodb", "user", "pwd");
+
+        UserDAO t = new UserDAO();
+        
+            cn.setSchema("DEMODB");
+            cn2.setSchema("DEMODB");
+            
+            User newUser;
+            String query = "SELECT * FROM DEMODB.USERS WHERE NICKNAME = ?";
+            PreparedStatement ps=cn.prepareStatement(query);
+            ps.setString(1, id);
+            ResultSet resultSet = ps.executeQuery();
+            String json = "{ \"USER\": [";
+
+                try{
+                while (resultSet.next()) {
+                newUser= new User(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getString(5));
+            
+                json = json.concat("{\"ID NICKNAME\":\""  + resultSet.getString(1) + "\",\"PASSWORD\":\"" + resultSet.getString(2)+ "\",\"NAME\":\"" 
+                     + resultSet.getString(3)+ "\",\"LAST NAME\":\"" + resultSet.getString(4) + "\",\"EMAIL\":\"" + resultSet.getString(5)+"\"},");     
+        }                 json = json.substring(0, json.length() - 1);
+
+                
+            Reservation newReservation;
+         //   ArrayList<Reservation> reservations = new ArrayList<>();
+            String query1 = "SELECT * FROM DEMODB.RESERVATIONS WHERE IDUSER = ?";
+            PreparedStatement ps1 =cn2.prepareStatement(query1);
+            ps1.setString(1, id);
+            ResultSet resultSet1 = ps1.executeQuery();
+
+            json = json.concat("],\"MY RESERVATIONS\": [");
+            while (resultSet1.next()) {
+                
+                newReservation=new Reservation(resultSet1.getInt(3),
+                        resultSet1.getInt(4),
+                        resultSet1.getInt(5),
+                        resultSet1.getInt(1),
+                        resultSet1.getString(2));
+           //     reservations.add(newReservation);
+                
+                json = json.concat("{\"ID RESERVATION\":"+ resultSet1.getInt(1) + ",\"ID USER\":\"" + resultSet1.getString(2) + "\",\"ID TOUR\":"+
+                        resultSet1.getInt(3) + ",\"TOTAL PRICE\":"+ resultSet1.getInt(4) + ",\"QUANTITY\":" + resultSet1.getInt(5) + "},");
+        }
+
+
+                json = json.substring(0, json.length() - 1);
+                json = json.concat("]}");//  json = json.concat("],\"USER\": [{\"ID NICKNAME\": \"simeon\",\"PASSWORD\":\"caca\"}]}");
+                
+        }catch(Exception e){
+            e.printStackTrace();
+           return Response.status(404).entity("error").build();
+
+        }finally{
+            cn.close();
+            cn2.close();
+        }//return Response.status(200).entity("").build(); //entity JSON convertido a String
+            return Response.status(200).entity(json).build();
+    }
+    
+    /*
+    @POST
+    //@Path("/post")
+    @Consumes(MediaType.APPLICATION_JSON)
+    
+    	@POST
+	//@Path("/post")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response createTrackInJSON() {
+
+		return Response.status(201).entity(result).build();
+
+	}*/
     }
